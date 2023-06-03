@@ -1,0 +1,71 @@
+[gd_scene load_steps=4 format=3 uid="uid://mxakydntqb6x"]
+
+[ext_resource type="Script" path="res://scenes/test.gd" id="1_ss305"]
+[ext_resource type="Script" path="res://scenes/camera.gd" id="4_guyce"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e5o4e"]
+size = Vector2(1280, 64)
+
+[node name="test" type="Node2D"]
+script = ExtResource("1_ss305")
+
+[node name="ground" type="StaticBody2D" parent="."]
+position = Vector2(0, 656)
+
+[node name="ground" type="ColorRect" parent="ground"]
+offset_right = 1280.0
+offset_bottom = 64.0
+color = Color(0, 0, 0, 1)
+
+[node name="collision_shape" type="CollisionShape2D" parent="ground"]
+position = Vector2(640, 32)
+shape = SubResource("RectangleShape2D_e5o4e")
+
+[node name="camera" type="Camera2D" parent="."]
+position = Vector2(640, 360)
+script = ExtResource("4_guyce")
+
+[node name="multiplayer_spawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://scenes/guy.tscn")
+spawn_path = NodePath("..")
+
+[node name="ui" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="join" type="Button" parent="ui"]
+offset_left = 5.0
+offset_top = 48.0
+offset_right = 131.0
+offset_bottom = 88.0
+text = "join"
+
+[node name="address" type="LineEdit" parent="ui"]
+offset_left = 148.0
+offset_top = 48.0
+offset_right = 343.0
+offset_bottom = 89.0
+text = "localhost"
+placeholder_text = "localhost"
+
+[node name="port" type="SpinBox" parent="ui"]
+offset_left = 359.0
+offset_top = 48.0
+offset_right = 470.0
+offset_bottom = 89.0
+max_value = 65535.0
+value = 8008.0
+prefix = "Port"
+
+[node name="host" type="Button" parent="ui"]
+offset_left = 5.0
+offset_top = 4.0
+offset_right = 131.0
+offset_bottom = 44.0
+text = "host"
+
+[connection signal="pressed" from="ui/join" to="." method="_start_client"]
+[connection signal="value_changed" from="ui/port" to="." method="_on_port_value_changed"]
+[connection signal="pressed" from="ui/host" to="." method="_start_server"]
